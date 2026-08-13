@@ -1,0 +1,13 @@
+.footer {
+  border-top: 1px solid var(--border-soft);
+  padding: 26px 0;
+}
+
+.footer__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+  gap: 8px;
+}

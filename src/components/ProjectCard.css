@@ -1,0 +1,1172 @@
+/* =========================================================
+   PROJECT CARD
+========================================================= */
+
+.project-card {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+
+  gap: 56px;
+
+  align-items: center;
+
+  padding: 64px 0;
+
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.project-card:last-child {
+  border-bottom: none;
+}
+
+
+/* Reversed project */
+
+.project-card--reversed {
+  direction: rtl;
+}
+
+.project-card--reversed > * {
+  direction: ltr;
+}
+
+
+/* =========================================================
+   PROJECT VISUAL
+========================================================= */
+
+.project-card__visual {
+  position: relative;
+
+  width: 100%;
+  min-width: 0;
+
+  padding: 10px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  background: var(--bg-panel);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.project-card__visual:hover {
+  border-color: rgba(46, 217, 168, 0.2);
+
+  box-shadow:
+    0 24px 48px -20px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(46, 217, 168, 0.08);
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.project-card__badge {
+  position: absolute;
+
+  top: 22px;
+  left: 22px;
+
+  z-index: 20;
+
+  padding: 6px 12px;
+
+  border-radius: 100px;
+
+  font-family: var(--font-mono);
+
+  font-size: 11px;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  background: rgba(18, 23, 31, 0.88);
+
+  color: var(--text-body);
+
+  border: 1px solid var(--border);
+
+  backdrop-filter: blur(8px);
+}
+
+.project-card__badge--live {
+  color: var(--bg-base);
+
+  background: var(--amber);
+
+  border-color: var(--amber);
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   MAIN SCREENSHOT CONTAINER
+========================================================= */
+
+.project-card__screenshot {
+  position: relative;
+
+  width: 100%;
+
+  /*
+    IMPORTANT:
+    No aspect-ratio here.
+    Image controls its own height.
+  */
+
+  overflow: hidden;
+
+  padding: 0;
+
+  border-radius: 10px;
+
+  border: 1px solid var(--border);
+
+  background: #080b0f;
+
+  line-height: 0;
+}
+
+
+/* =========================================================
+   MAIN SCREENSHOT IMAGE
+========================================================= */
+
+.project-card__screenshot img {
+  display: block;
+
+  width: 100%;
+
+  height: auto;
+
+  max-width: 100%;
+
+  object-fit: contain;
+
+  object-position: center;
+
+  background: #080b0f;
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+
+  transition: transform 0.3s ease;
+}
+
+.project-card__screenshot:hover img {
+  transform: scale(1.01);
+}
+
+
+/* =========================================================
+   SCREENSHOT ARROWS
+========================================================= */
+
+.project-card__gallery-arrow {
+  position: absolute;
+
+  top: 50%;
+
+  z-index: 15;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  transform: translateY(-50%);
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  background: rgba(10, 13, 17, 0.82);
+
+  color: #fff;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.project-card__gallery-arrow:hover {
+  transform: translateY(-50%) scale(1.08);
+
+  background: var(--accent);
+
+  border-color: var(--accent);
+
+  color: #07110d;
+}
+
+.project-card__gallery-arrow--left {
+  left: 14px;
+}
+
+.project-card__gallery-arrow--right {
+  right: 14px;
+}
+
+
+/* =========================================================
+   SCREENSHOT COUNTER
+========================================================= */
+
+.project-card__counter {
+  position: absolute;
+
+  right: 14px;
+  bottom: 14px;
+
+  z-index: 15;
+
+  padding: 7px 11px;
+
+  border-radius: 7px;
+
+  background: rgba(8, 11, 15, 0.82);
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  color: #fff;
+
+  font-family: var(--font-mono);
+
+  font-size: 11px;
+
+  line-height: 1;
+
+  backdrop-filter: blur(10px);
+}
+
+
+/* =========================================================
+   THUMBNAILS
+========================================================= */
+
+.project-card__thumbnails {
+  display: flex;
+
+  gap: 9px;
+
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 2px 2px 6px;
+
+  overflow-x: auto;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    var(--border)
+    transparent;
+}
+
+.project-card__thumbnails::-webkit-scrollbar {
+  height: 4px;
+}
+
+.project-card__thumbnails::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.project-card__thumbnails::-webkit-scrollbar-thumb {
+  background: var(--border);
+
+  border-radius: 20px;
+}
+
+
+/* =========================================================
+   THUMBNAIL
+========================================================= */
+
+.project-card__thumbnail {
+  flex: 0 0 82px;
+
+  width: 82px;
+  height: 58px;
+
+  padding: 0;
+
+  overflow: hidden;
+
+  border-radius: 8px;
+
+  border: 1px solid var(--border);
+
+  background: #080b0f;
+
+  opacity: 0.55;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.project-card__thumbnail:hover {
+  opacity: 0.9;
+
+  transform: translateY(-2px);
+}
+
+.project-card__thumbnail--active {
+  opacity: 1;
+
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 5px 15px rgba(46, 217, 168, 0.12);
+}
+
+.project-card__thumbnail img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position: center;
+}
+
+
+/* =========================================================
+   GALLERY COUNT
+========================================================= */
+
+.project-card__gallery-count {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  margin-top: 9px;
+
+  padding-left: 2px;
+
+  color: var(--text-dim);
+
+  font-family: var(--font-mono);
+
+  font-size: 10px;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   PROJECT CONTENT
+========================================================= */
+
+.project-card__content {
+  min-width: 0;
+}
+
+.project-card__location {
+  display: block;
+
+  font-family: var(--font-mono);
+
+  font-size: 12px;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  color: var(--accent);
+}
+
+.project-card__content h3 {
+  margin-top: 10px;
+
+  font-size: 28px;
+
+  line-height: 1.2;
+
+  color: var(--text-heading);
+}
+
+.project-card__tagline {
+  margin-top: 8px;
+
+  font-size: 16px;
+
+  line-height: 1.5;
+
+  color: var(--text-heading);
+
+  font-weight: 500;
+}
+
+.project-card__problem {
+  margin-top: 16px;
+
+  font-size: 14.5px;
+
+  line-height: 1.7;
+
+  color: var(--text-body);
+}
+
+
+/* =========================================================
+   TOGGLE
+========================================================= */
+
+.project-card__toggle {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  margin-top: 22px;
+
+  padding: 0;
+
+  border: none;
+
+  background: none;
+
+  color: var(--accent);
+
+  font-family: var(--font-display);
+
+  font-weight: 600;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.project-card__toggle:hover {
+  opacity: 0.8;
+}
+
+
+/* =========================================================
+   BREAKDOWN
+========================================================= */
+
+.project-card__breakdown {
+  margin-top: 20px;
+
+  padding: 20px 22px;
+
+  background: var(--bg-panel);
+
+  border: 1px solid var(--border-soft);
+
+  border-radius: 10px;
+}
+
+.project-card__breakdown ul {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin: 0;
+
+  padding-left: 18px;
+}
+
+.project-card__breakdown li {
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  color: var(--text-body);
+}
+
+.project-card__result {
+  margin-top: 14px;
+
+  padding-top: 14px;
+
+  border-top: 1px solid var(--border-soft);
+
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  color: var(--text-heading);
+
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   TAGS
+========================================================= */
+
+.project-card__tags {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 24px;
+}
+
+.project-card__tags span {
+  padding: 5px 11px;
+
+  border-radius: 100px;
+
+  border: 1px solid var(--border);
+
+  color: var(--text-dim);
+
+  font-family: var(--font-mono);
+
+  font-size: 11.5px;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.project-card__tags span:hover {
+  color: var(--accent);
+
+  border-color: var(--accent);
+}
+
+
+/* =========================================================
+   FULLSCREEN LIGHTBOX
+========================================================= */
+
+.project-lightbox {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(3, 6, 10, 0.97);
+
+  backdrop-filter: blur(14px);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   LIGHTBOX INNER
+========================================================= */
+
+.project-lightbox__inner {
+  width: min(1500px, 96vw);
+
+  height: min(920px, 94vh);
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+
+  min-height: 0;
+}
+
+
+/* =========================================================
+   LIGHTBOX HEADER
+========================================================= */
+
+.project-lightbox__header {
+  flex: 0 0 auto;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 0 4px 14px;
+
+  color: var(--text-heading);
+}
+
+.project-lightbox__header span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  font-family: var(--font-mono);
+
+  font-size: 10px;
+
+  letter-spacing: 0.1em;
+
+  text-transform: uppercase;
+
+  color: var(--accent);
+}
+
+.project-lightbox__header h3 {
+  margin: 0;
+
+  font-size: 22px;
+
+  line-height: 1.2;
+}
+
+.project-lightbox__header strong {
+  flex-shrink: 0;
+
+  padding: 8px 12px;
+
+  border: 1px solid var(--border);
+
+  border-radius: 8px;
+
+  background: var(--bg-panel);
+
+  font-family: var(--font-mono);
+
+  font-size: 11px;
+
+  color: var(--text-body);
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.project-lightbox__close {
+  position: fixed;
+
+  top: 20px;
+
+  right: 22px;
+
+  z-index: 10001;
+
+  width: 44px;
+
+  height: 44px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid var(--border);
+
+  border-radius: 50%;
+
+  background: rgba(18, 23, 31, 0.92);
+
+  color: var(--text-heading);
+
+  cursor: pointer;
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.project-lightbox__close:hover {
+  transform: scale(1.08);
+
+  background: var(--accent);
+
+  color: #07110d;
+}
+
+
+/* =========================================================
+   FULLSCREEN IMAGE AREA
+========================================================= */
+
+.project-lightbox__image {
+  position: relative;
+
+  flex: 1 1 auto;
+
+  min-width: 0;
+
+  min-height: 0;
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+
+  border-radius: 14px;
+
+  background: #05080c;
+}
+
+
+/* =========================================================
+   FULLSCREEN IMAGE
+========================================================= */
+
+.project-lightbox__image img {
+  display: block;
+
+  /*
+    VERY IMPORTANT:
+    Never force width: 100%;
+    Never force height: 100%;
+  */
+
+  width: auto;
+
+  height: auto;
+
+  max-width: calc(100% - 100px);
+
+  max-height: calc(100% - 30px);
+
+  object-fit: contain;
+
+  object-position: center;
+
+  border-radius: 8px;
+
+  box-shadow:
+    0 25px 80px rgba(0, 0, 0, 0.55);
+
+  user-select: none;
+
+  -webkit-user-drag: none;
+}
+
+
+/* =========================================================
+   FULLSCREEN ARROWS
+========================================================= */
+
+.project-lightbox__arrow {
+  position: absolute;
+
+  top: 50%;
+
+  z-index: 20;
+
+  width: 50px;
+
+  height: 50px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 0;
+
+  transform: translateY(-50%);
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  border-radius: 50%;
+
+  background: rgba(18, 23, 31, 0.92);
+
+  color: white;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.project-lightbox__arrow:hover {
+  transform: translateY(-50%) scale(1.08);
+
+  background: var(--accent);
+
+  border-color: var(--accent);
+
+  color: #07110d;
+}
+
+.project-lightbox__arrow--left {
+  left: 16px;
+}
+
+.project-lightbox__arrow--right {
+  right: 16px;
+}
+
+
+/* =========================================================
+   LIGHTBOX THUMBNAILS
+========================================================= */
+
+.project-lightbox__thumbnails {
+  flex: 0 0 auto;
+
+  display: flex;
+
+  gap: 8px;
+
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 2px 0 4px;
+
+  overflow-x: auto;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    var(--border)
+    transparent;
+}
+
+.project-lightbox__thumbnails::-webkit-scrollbar {
+  height: 4px;
+}
+
+.project-lightbox__thumbnails::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.project-lightbox__thumbnails::-webkit-scrollbar-thumb {
+  background: var(--border);
+
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   LIGHTBOX THUMBNAILS
+========================================================= */
+
+.project-lightbox__thumbnail {
+  flex: 0 0 78px;
+
+  width: 78px;
+
+  height: 52px;
+
+  padding: 0;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+
+  border-radius: 7px;
+
+  background: #080b0f;
+
+  opacity: 0.45;
+
+  cursor: pointer;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.project-lightbox__thumbnail:hover {
+  opacity: 0.85;
+
+  transform: translateY(-2px);
+}
+
+.project-lightbox__thumbnail--active {
+  opacity: 1;
+
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 0 1px var(--accent);
+}
+
+.project-lightbox__thumbnail img {
+  display: block;
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position: center;
+}
+
+
+/* =========================================================
+   LIGHTBOX HINT
+========================================================= */
+
+.project-lightbox__hint {
+  flex: 0 0 auto;
+
+  margin: 9px 0 0;
+
+  text-align: center;
+
+  font-family: var(--font-mono);
+
+  font-size: 10px;
+
+  letter-spacing: 0.06em;
+
+  color: var(--text-dim);
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .project-card,
+  .project-card--reversed {
+    grid-template-columns: 1fr;
+
+    direction: ltr;
+
+    gap: 28px;
+
+    padding: 44px 0;
+  }
+
+  .project-card__visual {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .project-card {
+    gap: 22px;
+
+    padding: 38px 0;
+  }
+
+  .project-card__visual {
+    padding: 8px;
+
+    border-radius: 14px;
+  }
+
+  .project-card__screenshot {
+    border-radius: 9px;
+  }
+
+  .project-card__badge {
+    top: 14px;
+
+    left: 14px;
+
+    padding: 6px 10px;
+
+    font-size: 9px;
+  }
+
+  .project-card__gallery-arrow {
+    width: 34px;
+
+    height: 34px;
+  }
+
+  .project-card__gallery-arrow--left {
+    left: 8px;
+  }
+
+  .project-card__gallery-arrow--right {
+    right: 8px;
+  }
+
+  .project-card__counter {
+    right: 8px;
+
+    bottom: 8px;
+
+    font-size: 9px;
+  }
+
+  .project-card__thumbnail {
+    flex: 0 0 68px;
+
+    width: 68px;
+
+    height: 48px;
+  }
+
+  .project-card__content h3 {
+    font-size: 24px;
+  }
+
+
+  /* -----------------------------
+     MOBILE LIGHTBOX
+  ----------------------------- */
+
+  .project-lightbox {
+    padding: 10px;
+  }
+
+  .project-lightbox__inner {
+    width: 100%;
+
+    height: 94vh;
+  }
+
+  .project-lightbox__header {
+    padding-right: 48px;
+  }
+
+  .project-lightbox__header h3 {
+    font-size: 18px;
+  }
+
+  .project-lightbox__header strong {
+    font-size: 9px;
+
+    padding: 6px 9px;
+  }
+
+  .project-lightbox__image {
+    border-radius: 10px;
+  }
+
+  .project-lightbox__image img {
+    max-width: calc(100% - 60px);
+
+    max-height: calc(100% - 20px);
+  }
+
+  .project-lightbox__arrow {
+    width: 38px;
+
+    height: 38px;
+  }
+
+  .project-lightbox__arrow--left {
+    left: 7px;
+  }
+
+  .project-lightbox__arrow--right {
+    right: 7px;
+  }
+
+  .project-lightbox__close {
+    top: 12px;
+
+    right: 12px;
+
+    width: 38px;
+
+    height: 38px;
+  }
+
+  .project-lightbox__thumbnail {
+    flex: 0 0 64px;
+
+    width: 64px;
+
+    height: 44px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media (max-width: 400px) {
+
+  .project-card__thumbnail {
+    flex-basis: 60px;
+
+    width: 60px;
+
+    height: 44px;
+  }
+
+  .project-card__gallery-arrow {
+    width: 30px;
+
+    height: 30px;
+  }
+
+  .project-lightbox__image img {
+    max-width: calc(100% - 50px);
+
+    max-height: calc(100% - 10px);
+  }
+
+  .project-lightbox__arrow {
+    width: 32px;
+
+    height: 32px;
+  }
+}
