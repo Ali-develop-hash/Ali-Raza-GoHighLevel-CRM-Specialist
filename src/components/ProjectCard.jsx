@@ -2,42 +2,36 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
-  ImageIcon,
   Maximize2,
   X,
+  CheckCircle2,
+  TrendingUp,
+  Cpu,
+  Sparkles
 } from 'lucide-react';
 import './ProjectCard.css';
 
 export default function ProjectCard({ project, reversed }) {
   const cardRef = useRef(null);
 
-  const [open, setOpen] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [activeImage, setActiveImage] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('solution'); // 'solution' | 'architecture'
 
   const screenshots = project.screenshots || [];
+  const isLive = project.category === 'live' || project.badge === 'Live Client' || project.badge === 'Live Client Deployment';
 
-  const isLive = project.badge === 'Live Client';
-
-  /* =========================================================
-     TILT EFFECT
-  ========================================================= */
-
+  /* Tilt effect */
   const handleMove = (e) => {
     const el = cardRef.current;
-
     if (!el) return;
-
     const rect = el.getBoundingClientRect();
-
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-
     setTilt({
-      x: py * -6,
-      y: px * 8,
+      x: py * -5,
+      y: px * 7,
     });
   };
 
@@ -45,33 +39,22 @@ export default function ProjectCard({ project, reversed }) {
     setTilt({ x: 0, y: 0 });
   };
 
-  /* =========================================================
-     IMAGE NAVIGATION
-  ========================================================= */
-
-  const nextImage = () => {
+  /* Image navigation */
+  const nextImage = (e) => {
+    e?.stopPropagation();
     if (!screenshots.length) return;
-
-    setActiveImage((current) =>
-      current === screenshots.length - 1 ? 0 : current + 1
-    );
+    setActiveImage((current) => (current === screenshots.length - 1 ? 0 : current + 1));
   };
 
-  const previousImage = () => {
+  const previousImage = (e) => {
+    e?.stopPropagation();
     if (!screenshots.length) return;
-
-    setActiveImage((current) =>
-      current === 0 ? screenshots.length - 1 : current - 1
-    );
+    setActiveImage((current) => (current === 0 ? screenshots.length - 1 : current - 1));
   };
 
-  /* =========================================================
-     LIGHTBOX
-  ========================================================= */
-
+  /* Lightbox controls */
   const openLightbox = () => {
     if (!screenshots.length) return;
-
     setLightboxOpen(true);
   };
 
@@ -79,10 +62,7 @@ export default function ProjectCard({ project, reversed }) {
     setLightboxOpen(false);
   };
 
-  /* =========================================================
-     KEYBOARD CONTROLS
-  ========================================================= */
-
+  /* Keyboard Controls */
   useEffect(() => {
     if (!lightboxOpen) return;
 
@@ -90,46 +70,27 @@ export default function ProjectCard({ project, reversed }) {
       if (e.key === 'Escape') {
         setLightboxOpen(false);
       }
-
       if (e.key === 'ArrowRight') {
-        setActiveImage((current) =>
-          current === screenshots.length - 1 ? 0 : current + 1
-        );
+        setActiveImage((current) => (current === screenshots.length - 1 ? 0 : current + 1));
       }
-
       if (e.key === 'ArrowLeft') {
-        setActiveImage((current) =>
-          current === 0 ? screenshots.length - 1 : current - 1
-        );
+        setActiveImage((current) => (current === 0 ? screenshots.length - 1 : current - 1));
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-
     document.body.style.overflow = 'hidden';
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-
       document.body.style.overflow = '';
     };
   }, [lightboxOpen, screenshots.length]);
 
   return (
     <>
-      {/* =====================================================
-          PROJECT CARD
-      ===================================================== */}
-
-      <article
-        className={`project-card ${
-          reversed ? 'project-card--reversed' : ''
-        }`}
-      >
-        {/* ===================================================
-            PROJECT VISUAL
-        =================================================== */}
-
+      <article className={`project-card glass-panel ${reversed ? 'project-card--reversed' : ''}`}>
+        {/* Visual / Screenshot Gallery Side */}
         <div
           ref={cardRef}
           className="project-card__visual"
@@ -139,200 +100,155 @@ export default function ProjectCard({ project, reversed }) {
             transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
           }}
         >
-          {/* BADGE */}
-
-          <div
-            className={`project-card__badge ${
-              isLive ? 'project-card__badge--live' : ''
-            }`}
-          >
-            {project.badge}
+          {/* Badge */}
+          <div className={`project-card__badge ${isLive ? 'project-card__badge--live' : ''}`}>
+            {isLive && <span className="badge-pulse-dot" />}
+            <span>{project.badge}</span>
           </div>
 
-          {screenshots.length > 0 ? (
-            <>
-              {/* =================================================
-                  MAIN SCREENSHOT
-              ================================================= */}
-
-              <div
-                className="project-card__screenshot project-card__screenshot--gallery"
-                onClick={openLightbox}
-              >
-                <img
-                  src={screenshots[activeImage]}
-                  alt={`${project.name} screenshot ${
-                    activeImage + 1
-                  }`}
-                />
-
-                {/* FULLSCREEN LABEL */}
-
-                <div className="project-card__fullscreen">
-                  <Maximize2 size={18} />
-
-                  <span>View fullscreen</span>
-                </div>
-
-                {/* COUNTER */}
-
-                <div className="project-card__counter">
-                  {activeImage + 1} / {screenshots.length}
-                </div>
-
-                {/* PREVIOUS */}
-
-                {screenshots.length > 1 && (
-                  <button
-                    type="button"
-                    className="project-card__gallery-arrow project-card__gallery-arrow--left"
-                    onClick={(e) => {
-                      e.stopPropagation();
-
-                      previousImage();
-                    }}
-                    aria-label="Previous screenshot"
-                  >
-                    <ArrowLeft size={18} />
-                  </button>
-                )}
-
-                {/* NEXT */}
-
-                {screenshots.length > 1 && (
-                  <button
-                    type="button"
-                    className="project-card__gallery-arrow project-card__gallery-arrow--right"
-                    onClick={(e) => {
-                      e.stopPropagation();
-
-                      nextImage();
-                    }}
-                    aria-label="Next screenshot"
-                  >
-                    <ArrowRight size={18} />
-                  </button>
-                )}
-              </div>
-
-              {/* =================================================
-                  THUMBNAILS
-              ================================================= */}
-
-              {screenshots.length > 1 && (
-                <div className="project-card__thumbnails">
-                  {screenshots.map((image, index) => (
-                    <button
-                      type="button"
-                      key={`${project.id}-image-${index}`}
-                      className={`project-card__thumbnail ${
-                        index === activeImage
-                          ? 'project-card__thumbnail--active'
-                          : ''
-                      }`}
-                      onClick={() => setActiveImage(index)}
-                    >
-                      <img
-                        src={image}
-                        alt={`${project.name} thumbnail ${
-                          index + 1
-                        }`}
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* GALLERY COUNT */}
-
-              <div className="project-card__gallery-count">
-                <ImageIcon size={13} />
-
-                {screenshots.length} screenshots
-              </div>
-            </>
-          ) : (
-            /* =================================================
-               FALLBACK
-            ================================================= */
-
-            <div
-              className="project-card__screenshot"
-              role="img"
-              aria-label={`${project.name} screenshot placeholder`}
-            >
-              <ImageIcon
-                size={26}
-                strokeWidth={1.5}
+          {/* Main Screenshot Container */}
+          <div className="project-card__main-image" onClick={openLightbox}>
+            {screenshots.length > 0 ? (
+              <img
+                src={screenshots[activeImage]}
+                alt={`${project.name} GHL Workflow Screenshot ${activeImage + 1}`}
+                loading="lazy"
               />
+            ) : (
+              <div className="project-card__empty">No Screenshots Available</div>
+            )}
 
-              <span>
-                Add screenshot: {project.name} pipeline /
-                workflow view
-              </span>
+            {/* Hover overlay hint */}
+            <div className="project-card__image-overlay">
+              <Maximize2 size={20} />
+              <span>Click to view full-resolution ({activeImage + 1}/{screenshots.length})</span>
+            </div>
+
+            {/* Navigation arrows */}
+            {screenshots.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    previousImage(e);
+                  }}
+                  className="project-card__arrow project-card__arrow--left"
+                  aria-label="Previous Screenshot"
+                >
+                  <ArrowLeft size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextImage(e);
+                  }}
+                  className="project-card__arrow project-card__arrow--right"
+                  aria-label="Next Screenshot"
+                >
+                  <ArrowRight size={16} />
+                </button>
+              </>
+            )}
+
+            <div className="project-card__counter">
+              {activeImage + 1} / {screenshots.length}
+            </div>
+          </div>
+
+          {/* Thumbnails Strip */}
+          {screenshots.length > 1 && (
+            <div className="project-card__thumbnails">
+              {screenshots.map((shot, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setActiveImage(idx)}
+                  className={`project-card__thumbnail ${idx === activeImage ? 'project-card__thumbnail--active' : ''}`}
+                >
+                  <img src={shot} alt={`Thumbnail ${idx + 1}`} loading="lazy" />
+                </button>
+              ))}
             </div>
           )}
         </div>
 
-        {/* =====================================================
-            PROJECT CONTENT
-        ===================================================== */}
-
+        {/* Content Side */}
         <div className="project-card__content">
-          <span className="project-card__location">
-            {project.location}
-          </span>
+          <div className="project-card__meta">
+            <span className="project-card__client-type">{project.clientType || project.location}</span>
+            <span className="project-card__meta-dot">•</span>
+            <span className="project-card__location">{project.location}</span>
+          </div>
 
-          <h3>{project.name}</h3>
+          <h3 className="project-card__title">{project.name}</h3>
+          <p className="project-card__tagline">{project.tagline}</p>
 
-          <p className="project-card__tagline">
-            {project.tagline}
-          </p>
-
-          <p className="project-card__problem">
-            {project.problem}
-          </p>
-
-          {/* BREAKDOWN BUTTON */}
-
-          <button
-            type="button"
-            className="project-card__toggle"
-            onClick={() => setOpen((o) => !o)}
-          >
-            {open ? 'Hide breakdown' : 'View breakdown'}
-
-            <ArrowUpRight
-              size={15}
-              style={{
-                transform: open
-                  ? 'rotate(135deg)'
-                  : 'none',
-
-                transition:
-                  'transform 0.25s ease',
-              }}
-            />
-          </button>
-
-          {/* BREAKDOWN */}
-
-          {open && (
-            <div className="project-card__breakdown">
-              <ul>
-                {project.solution.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-
-              <p className="project-card__result">
-                {project.result}
-              </p>
+          {/* Metric Highlight Box */}
+          {project.metricHighlight && (
+            <div className="project-card__metric-badge">
+              <TrendingUp size={15} className="text-accent" />
+              <span>{project.metricHighlight}</span>
             </div>
           )}
 
-          {/* TAGS */}
+          {/* Tab Switcher: Solution vs Architecture */}
+          <div className="project-card__tabs">
+            <button
+              onClick={() => setActiveTab('solution')}
+              className={`project-card__tab ${activeTab === 'solution' ? 'project-card__tab--active' : ''}`}
+            >
+              <CheckCircle2 size={14} />
+              <span>System Deliverables</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('architecture')}
+              className={`project-card__tab ${activeTab === 'architecture' ? 'project-card__tab--active' : ''}`}
+            >
+              <Cpu size={14} />
+              <span>Architecture Logic</span>
+            </button>
+          </div>
 
+          {/* Tab Content */}
+          <div className="project-card__tab-content">
+            {activeTab === 'solution' ? (
+              <div className="project-card__section">
+                <p className="project-card__problem">{project.problem}</p>
+                <ul className="project-card__solution-list">
+                  {project.solution.map((item, idx) => (
+                    <li key={idx}>
+                      <CheckCircle2 size={14} className="text-accent list-icon" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="project-card__section">
+                <ul className="project-card__solution-list">
+                  {(project.architecture || project.solution).map((item, idx) => (
+                    <li key={idx}>
+                      <Cpu size={14} className="text-cyan list-icon" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          {/* Result Block */}
+          <div className="project-card__result">
+            <div className="project-card__result-label">
+              <Sparkles size={13} className="text-accent" />
+              <strong>Measurable Result:</strong>
+            </div>
+            <p>{project.result}</p>
+          </div>
+
+          {/* Tags */}
           <div className="project-card__tags">
             {project.tags.map((tag) => (
               <span key={tag}>{tag}</span>
@@ -341,120 +257,82 @@ export default function ProjectCard({ project, reversed }) {
         </div>
       </article>
 
-      {/* =====================================================
-          FULLSCREEN LIGHTBOX
-      ===================================================== */}
-
-      {lightboxOpen && screenshots.length > 0 && (
-        <div
-          className="project-lightbox"
-          onClick={closeLightbox}
-        >
-          {/* CLOSE BUTTON */}
-
-          <button
-            type="button"
-            className="project-lightbox__close"
-            onClick={closeLightbox}
-            aria-label="Close gallery"
-          >
-            <X size={24} />
-          </button>
-
-          {/* LIGHTBOX CONTENT */}
-
-          <div
-            className="project-lightbox__inner"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* HEADER */}
-
+      {/* Fullscreen Lightbox Modal */}
+      {lightboxOpen && (
+        <div className="project-lightbox" onClick={closeLightbox}>
+          <div className="project-lightbox__content" onClick={(e) => e.stopPropagation()}>
             <div className="project-lightbox__header">
               <div>
-                <span>{project.location}</span>
-
-                <h3>{project.name}</h3>
+                <span>{project.badge} • {project.name}</span>
+                <h3>{project.tagline}</h3>
               </div>
-
-              <strong>
-                {activeImage + 1} / {screenshots.length}
-              </strong>
+              <div className="project-lightbox__counter">
+                Screenshot {activeImage + 1} of {screenshots.length}
+              </div>
             </div>
 
-            {/* =================================================
-                FULLSCREEN IMAGE
-            ================================================= */}
+            <button
+              type="button"
+              className="project-lightbox__close"
+              onClick={closeLightbox}
+              aria-label="Close Lightbox"
+            >
+              <X size={20} />
+            </button>
 
-            <div className="project-lightbox__image">
+            <div className="project-lightbox__image-wrap">
               <img
                 src={screenshots[activeImage]}
-                alt={`${project.name} screenshot ${
-                  activeImage + 1
-                }`}
+                alt={`${project.name} Screenshot ${activeImage + 1}`}
               />
 
-              {/* PREVIOUS */}
-
               {screenshots.length > 1 && (
-                <button
-                  type="button"
-                  className="project-lightbox__arrow project-lightbox__arrow--left"
-                  onClick={previousImage}
-                  aria-label="Previous screenshot"
-                >
-                  <ArrowLeft size={24} />
-                </button>
-              )}
-
-              {/* NEXT */}
-
-              {screenshots.length > 1 && (
-                <button
-                  type="button"
-                  className="project-lightbox__arrow project-lightbox__arrow--right"
-                  onClick={nextImage}
-                  aria-label="Next screenshot"
-                >
-                  <ArrowRight size={24} />
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      previousImage(e);
+                    }}
+                    className="project-lightbox__arrow project-lightbox__arrow--left"
+                    aria-label="Previous"
+                  >
+                    <ArrowLeft size={20} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextImage(e);
+                    }}
+                    className="project-lightbox__arrow project-lightbox__arrow--right"
+                    aria-label="Next"
+                  >
+                    <ArrowRight size={20} />
+                  </button>
+                </>
               )}
             </div>
 
-            {/* =================================================
-                LIGHTBOX THUMBNAILS
-            ================================================= */}
-
+            {/* Lightbox Thumbnails */}
             {screenshots.length > 1 && (
               <div className="project-lightbox__thumbnails">
-                {screenshots.map((image, index) => (
+                {screenshots.map((shot, idx) => (
                   <button
+                    key={idx}
                     type="button"
-                    key={`${project.id}-lightbox-${index}`}
-                    className={
-                      index === activeImage
-                        ? 'project-lightbox__thumbnail project-lightbox__thumbnail--active'
-                        : 'project-lightbox__thumbnail'
-                    }
-                    onClick={() =>
-                      setActiveImage(index)
-                    }
+                    onClick={() => setActiveImage(idx)}
+                    className={`project-lightbox__thumbnail ${idx === activeImage ? 'project-lightbox__thumbnail--active' : ''}`}
                   >
-                    <img
-                      src={image}
-                      alt={`${project.name} thumbnail ${
-                        index + 1
-                      }`}
-                    />
+                    <img src={shot} alt={`Thumb ${idx + 1}`} loading="lazy" />
                   </button>
                 ))}
               </div>
             )}
 
-            {/* HINT */}
-
-            <p className="project-lightbox__hint">
-              ← → Navigate &nbsp; • &nbsp; ESC Close
-            </p>
+            <div className="project-lightbox__hint">
+              Use ← / → keys on your keyboard to navigate • Esc to close
+            </div>
           </div>
         </div>
       )}

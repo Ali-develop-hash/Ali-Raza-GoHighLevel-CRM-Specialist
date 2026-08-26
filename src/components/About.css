@@ -1,36 +1,86 @@
 .about {
-  padding: 120px 0;
-  border-top: 1px solid var(--border-soft);
+  position: relative;
+  overflow: hidden;
 }
 
 .about__grid {
   display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: 60px;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.about__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .about__title {
-  font-size: clamp(26px, 3vw, 34px);
-  line-height: 1.25;
-  margin-top: 18px;
+  font-size: clamp(26px, 3.5vw, 42px);
+  line-height: 1.15;
+  color: var(--text-heading);
+  margin-top: 8px;
 }
 
-.about__body {
+.about__bio {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  font-size: 16px;
-  line-height: 1.75;
+  gap: 14px;
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.7;
   color: var(--text-body);
-  padding-top: 6px;
+}
+.about__bio strong { color: var(--text-heading); }
+.about__bio em { color: var(--accent); font-style: normal; }
+
+/* Pillar Cards */
+.about__pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.about__body p:first-child {
-  color: var(--text-heading);
-  font-size: 17px;
+.about-card {
+  padding: 20px 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: all 0.25s ease;
+}
+.about-card:hover {
+  transform: translateX(4px);
+  border-color: rgba(46, 217, 168, 0.35);
+  background: var(--bg-card-hover);
 }
 
-@media (max-width: 860px) {
-  .about { padding: 80px 0; }
-  .about__grid { grid-template-columns: 1fr; gap: 28px; }
+.about-card__icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.about-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.about-card__title { font-size: 15px; font-weight: 700; color: var(--text-heading); }
+.about-card__desc { font-size: 13px; line-height: 1.55; color: var(--text-body); }
+
+@media (max-width: 900px) {
+  .about__grid { grid-template-columns: 1fr; gap: 36px; }
+  .about__pillars { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+}
+
+@media (max-width: 560px) {
+  .about__pillars { grid-template-columns: 1fr; }
+  .about__title { font-size: 24px; }
+  .about__bio { font-size: 14px; }
 }
