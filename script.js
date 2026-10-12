@@ -4,6 +4,18 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var EMAIL = 'aaliraza2010@gmail.com';
 
+  /* Prevent pinch-zoom on mobile */
+  document.addEventListener('gesturestart', function (e) { e.preventDefault(); }, { passive: false });
+  document.addEventListener('gesturechange', function (e) { e.preventDefault(); }, { passive: false });
+  document.addEventListener('gestureend', function (e) { e.preventDefault(); }, { passive: false });
+  var lastTouchEnd = 0;
+  document.addEventListener('touchend', function (e) {
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) e.preventDefault();
+    lastTouchEnd = now;
+  }, { passive: false });
+
+
   /* ================= DATA ================= */
   var STAGES = [
     { id: 'progress', name: 'In Progress' },
@@ -239,7 +251,7 @@
       name: 'CIH Urology',
       domain: 'cihurology.com',
       url: 'https://cihurology.com',
-      blurb: 'Main multi-page medical website for Capital International Hospital — built in GoHighLevel with custom code.',
+      blurb: 'Main multi-page medical website for Capital International Hospital, built in GoHighLevel with custom code.',
       tags: ['Live', 'GHL Website']
     },
     {
@@ -303,25 +315,39 @@
     if (t) { e.preventDefault(); show(t.dataset.view); }
   });
 
-  /* ================= MOBILE SIDEBAR TOGGLE ONLY ================= */
+  /* ================= SIDEBAR TOGGLE ================= */
   var side = $('#gx-side'), sideOv = $('#gx-side-ov'), sideTog = $('#gx-side-toggle');
+  var gxRoot = $('#gx');
   function isMobile() { return window.innerWidth <= 860; }
   function openSide() {
-    if (!side || !isMobile()) return;
-    side.classList.add('open');
-    if (sideOv) sideOv.classList.add('open');
+    if (!side) return;
+    if (isMobile()) {
+      side.classList.add('open');
+      if (sideOv) sideOv.classList.add('open');
+    } else if (gxRoot) {
+      gxRoot.classList.remove('side-collapsed');
+    }
   }
   function closeSide() {
     if (!side) return;
-    side.classList.remove('open');
-    if (sideOv) sideOv.classList.remove('open');
+    if (isMobile()) {
+      side.classList.remove('open');
+      if (sideOv) sideOv.classList.remove('open');
+    }
+    /* desktop: do not auto-collapse on nav click */
+  }
+  function toggleSide() {
+    if (isMobile()) {
+      if (side.classList.contains('open')) closeSide();
+      else openSide();
+    } else if (gxRoot) {
+      gxRoot.classList.toggle('side-collapsed');
+    }
   }
   if (sideTog) {
     sideTog.addEventListener('click', function (e) {
       e.stopPropagation();
-      if (!isMobile()) return;
-      if (side.classList.contains('open')) closeSide();
-      else openSide();
+      toggleSide();
     });
   }
   if (sideOv) sideOv.addEventListener('click', closeSide);
@@ -523,23 +549,25 @@
       timers.push(setTimeout(function () { el.classList.add('in'); }, reduce ? 0 : step * i + 80));
     });
     setTimeout(function () {
-      if (window.innerWidth < 700) setZoom(0.65);
+      var mobile = window.innerWidth < 700;
+      if (mobile) setZoom(0.7);
       else setZoom(1);
       setTimeout(function () {
         var first = flowEl.querySelector('.gx-step');
-        if (first) {
+        if (first && bc) {
+          /* Center first step in the viewport */
           var fr = first.getBoundingClientRect();
           var br = bc.getBoundingClientRect();
           var targetLeft = bc.scrollLeft + (fr.left - br.left) - (br.width / 2) + (fr.width / 2);
-          var targetTop = bc.scrollTop + (fr.top - br.top) - 40;
+          var targetTop = bc.scrollTop + (fr.top - br.top) - (mobile ? 24 : 40);
           bc.scrollLeft = Math.max(0, targetLeft);
           bc.scrollTop = Math.max(0, targetTop);
-        } else {
+        } else if (bc) {
           bc.scrollLeft = Math.max(0, (bc.scrollWidth - bc.clientWidth) / 2);
           bc.scrollTop = 0;
         }
-      }, 60);
-    }, 40);
+      }, mobile ? 120 : 60);
+    }, 50);
   }
   function closeFlow() {
     if (!builder) return;
@@ -661,7 +689,7 @@
           msgInput.placeholder = 'Type your message / query';
         }
         chatStep = 'message';
-        reply('Thanks! Now tell me a bit about your business or what you need automated. Press Send when ready — it will open an email to me with your details.', 500);
+        reply('Thanks! Now tell me a bit about your business or what you need automated. Press Send when ready. It will open an email to me with your details.', 500);
         return;
       }
 
