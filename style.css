@@ -664,17 +664,21 @@ button,input,textarea{font-family:inherit}
 }
 
 
-/* Mobile workflow: keep first step reachable, less blank space */
+/* Mobile workflow: center first step, keep horizontal branches (scrollable) */
 @media(max-width:700px){
   .gx-bc{padding:16px 8px 80px;scroll-padding-top:16px}
   .gx-flow{
     align-items:center;
-    min-width:100%;
+    min-width:max-content;
     padding-top:8px;
   }
-  .gx-step{max-width:min(320px,92vw)}
-  .gx-branches{flex-direction:column;align-items:center;width:100%}
-  .gx-bcol{padding:12px 0 0}
-  .gx-bcol::before{display:none}
-  .gx-branches .gx-step{width:min(280px,90vw);max-width:min(280px,90vw)}
+  .gx-step{max-width:min(320px,88vw)}
+  .gx-branches{
+    flex-direction:row;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    width:max-content;
+  }
+  .gx-bcol{padding:20px 8px 0}
+  .gx-branches .gx-step{width:220px;max-width:220px}
 }
